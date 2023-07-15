@@ -7,7 +7,6 @@ import { Button } from './Button/Button';
 import { Modal } from './Modal/Modal';
 import { Loader } from './Loader/Loader';
 import {ServiceMessage} from './ServiceMessage/ServiceMessage'
-// import { toast } from 'react-toastify';
 
 export const IMAGE_PER_PAGE = 12;
 
@@ -68,10 +67,7 @@ handleClickLoadMore = () => {
   };
 
   handleOpenModal = evt => {
-    // console.log('OpenModal Click');
-    // console.log(evt.currentTarget.id);
-    // console.log(this.state.images[evt.currentTarget.id].largeImageURL);
-    this.setState({
+      this.setState({
       selectedImageUrl: this.state.images[evt.currentTarget.id].largeImageURL,
     });
   };
@@ -81,8 +77,8 @@ handleClickLoadMore = () => {
   };
 
   isLoadMore = () => {
-    const { searchQuery, currentPage, totalPages } = this.state;
-    return !(!searchQuery || currentPage * IMAGE_PER_PAGE >= totalPages);
+    const { searchQuery, currentPage, totalPages, isLoading } = this.state;
+    return !(!searchQuery || currentPage * IMAGE_PER_PAGE >= totalPages || isLoading);
   };
 
   render() {
