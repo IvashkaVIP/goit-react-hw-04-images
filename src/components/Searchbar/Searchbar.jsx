@@ -12,7 +12,7 @@ export const Searchbar = ({ handleQuery }) => {
     handleQuery(query);
     setQuery('');
   };
-  const handleChange = evt => setQuery(evt.target.value); // упростить
+  const handleChange = evt => setQuery(evt.target.value); 
 
   return (
     <>
@@ -39,46 +39,46 @@ export const Searchbar = ({ handleQuery }) => {
 };
 
 //------------------------------------------------------------------
-export class oldSearchbar extends Component {
-  state = { query: '' };
+// export class oldSearchbar extends Component {
+//   state = { query: '' };
 
-  handlerSubmit = evt => {
-    evt.preventDefault();
-    this.props.handleQuery(this.state);
-    this.reset();
-  };
+//   handlerSubmit = evt => {
+//     evt.preventDefault();
+//     this.props.handleQuery(this.state);
+//     this.reset();
+//   };
 
-  handleChange = evt => {
-    const query = evt.target.value;
-    this.setState({ query });
-  };
-  reset = () => {
-    this.setState({ query: '' });
-  };
+//   handleChange = evt => {
+//     const query = evt.target.value;
+//     this.setState({ query });
+//   };
+//   reset = () => {
+//     this.setState({ query: '' });
+//   };
 
-  render() {
-    return (
-      <header className={css.Searchbar}>
-        <form className={css.SearchForm} onSubmit={this.handlerSubmit}>
-          <button type="submit">
-            <AiOutlineSearch className={css['SearchForm-button']} />
-            <span className={css['SearchForm-button-label']}>Search</span>
-          </button>
+//   render() {
+//     return (
+//       <header className={css.Searchbar}>
+//         <form className={css.SearchForm} onSubmit={this.handlerSubmit}>
+//           <button type="submit">
+//             <AiOutlineSearch className={css['SearchForm-button']} />
+//             <span className={css['SearchForm-button-label']}>Search</span>
+//           </button>
 
-          <input
-            className={css['SearchForm-input']}
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder=" Search images and photos"
-            value={this.state.name}
-            onChange={this.handleChange}
-          />
-        </form>
-      </header>
-    );
-  }
-}
+//           <input
+//             className={css['SearchForm-input']}
+//             type="text"
+//             autoComplete="off"
+//             autoFocus
+//             placeholder=" Search images and photos"
+//             value={this.state.name}
+//             onChange={this.handleChange}
+//           />
+//         </form>
+//       </header>
+//     );
+//   }
+// }
 
 PropTypes.Searchbar = {
   handleQuery: PropTypes.func.isRequired,

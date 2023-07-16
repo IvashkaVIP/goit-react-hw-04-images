@@ -1,27 +1,29 @@
 import css from './App.module.css';
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { getImages } from './Api/Api';
 import { Button } from './Button/Button';
 import { Modal } from './Modal/Modal';
 import { Loader } from './Loader/Loader';
-import { ServiceMessage } from './ServiceMessage/ServiceMessage'
+import { ServiceMessage } from './ServiceMessage/ServiceMessage';
 // import toasty from 'toasty';
 export const IMAGE_PER_PAGE = 12;
 
-
-
 export const App = () => {
-    
   const [images, setImages] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [selectedImageUrl, setselectedImageUrl] = useState(1);
+  const [selectedImageUrl, setSelectedImageUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = ({ query }) => {
+  useEffect(() => {
+    if (!searchQuery) return;
+    apiImages(searchQuery, currentPage);
+  }, [searchQuery, currentPage]);
+
+  const handleSubmit = query => {
     if (!query) {
       // toasty.error('The request cannot be empty');
       alert('The request cannot be empty');
@@ -31,22 +33,40 @@ export const App = () => {
     setImages([]);
     setSearchQuery(query);
     setCurrentPage(1);
-    console.log(query);
-  }
+  };
+  const apiImages = async (query, page) => {
+    let data;
+
+    setIsLoading(true);
+    try {
+      data = await getImages(query, page);
+    } catch (er) {
+      console.log(er);
+    } finally {
+      setIsLoading(false);
+    }
+    setImages(prevIm => [...prevIm, ...data.hits]);
+    setTotalPages(data.totalHits);
+  };
+  const handleOpenModal = evt => {
+    setSelectedImageUrl(images[evt.currentTarget.id].largeImageURL);
+  };
 
   return (
-    <>
+    <div className={css.App}>
       <Searchbar handleQuery={handleSubmit} />
-    </>
+      {isLoading && <Loader />}
+      <ServiceMessage State={{ images, searchQuery, isLoading }} />
+      <ImageGallery images={images} onClick={handleOpenModal} />
+
+      {selectedImageUrl && (
+        <Modal onClose={setSelectedImageUrl}>
+          <img src={selectedImageUrl} alt="" />{' '}
+        </Modal>
+      )}
+    </div>
   );
-
-}
-
-
-
-
-
-
+};
 
 //-----------------------------------------------------------------------------
 export class oldApp extends Component {
@@ -81,28 +101,26 @@ export class oldApp extends Component {
     } finally {
       this.setState({ isLoading: false });
     }
-    
-      this.setState(({ images }) => ({
-        images: [...images, ...data.hits],
-        totalPages: data.totalHits,
-      }));
 
+    this.setState(({ images }) => ({
+      images: [...images, ...data.hits],
+      totalPages: data.totalHits,
+    }));
   };
 
-  handleSubmit = ({query}) => {
+  handleSubmit = ({ query }) => {
     if (!query) {
       // toasty.error('The request cannot be empty');
-      alert('The request cannot be empty'); 
+      alert('The request cannot be empty');
       return;
     }
-    
+
     this.setState({ images: [], searchQuery: query, currentPage: 1 });
-    
   };
 
-handleClickLoadMore = () => {
-  this.setState(prevState => {
-    // console.log('Click LoadMore');
+  handleClickLoadMore = () => {
+    this.setState(prevState => {
+      // console.log('Click LoadMore');
       return {
         currentPage: prevState.currentPage + 1,
       };
@@ -110,7 +128,7 @@ handleClickLoadMore = () => {
   };
 
   handleOpenModal = evt => {
-      this.setState({
+    this.setState({
       selectedImageUrl: this.state.images[evt.currentTarget.id].largeImageURL,
     });
   };
@@ -121,17 +139,21 @@ handleClickLoadMore = () => {
 
   isLoadMore = () => {
     const { searchQuery, currentPage, totalPages, isLoading } = this.state;
-    return !(!searchQuery || currentPage * IMAGE_PER_PAGE >= totalPages || isLoading);
+    return !(
+      !searchQuery ||
+      currentPage * IMAGE_PER_PAGE >= totalPages ||
+      isLoading
+    );
   };
 
   render() {
-    const { images, selectedImageUrl, isLoading} = this.state;
+    const { images, selectedImageUrl, isLoading } = this.state;
 
     return (
       <div className={css.App}>
         <Searchbar handleQuery={this.handleSubmit} />
         {isLoading && <Loader />}
-        <ServiceMessage State={ this.state} />
+        <ServiceMessage State={this.state} />
         <ImageGallery images={images} onClick={this.handleOpenModal} />
         {this.isLoadMore() && <Button onClick={this.handleClickLoadMore} />}
         {selectedImageUrl && (

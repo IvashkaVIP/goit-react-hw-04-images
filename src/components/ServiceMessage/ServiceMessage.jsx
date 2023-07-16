@@ -1,8 +1,9 @@
 
 export const ServiceMessage = ({ State }) => {
-  const { images, searchQuery, isLoading } = State;
-  
-    if (!isLoading && searchQuery && !images.length) { return (
+  const { isLoading, searchQuery, images } = State;
+  // console.log('ServiceMes >>>>>   ',isLoading,' ', searchQuery,' ', images,'   ', Date.now());
+  if (!isLoading && searchQuery && !images.length) {
+    return (
       <h1
         style={{
           marginLeft: 'auto',
@@ -12,7 +13,7 @@ export const ServiceMessage = ({ State }) => {
       >
         Sorry, no data available on request "{searchQuery}"
       </h1>
-  );
+    );
   }
   if (!isLoading && !searchQuery) {
     return (
@@ -27,8 +28,5 @@ export const ServiceMessage = ({ State }) => {
       </h1>
     );
   }
-    
-
-
-}
+};
 
