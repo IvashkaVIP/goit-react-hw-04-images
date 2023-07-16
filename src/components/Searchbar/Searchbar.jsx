@@ -1,9 +1,45 @@
 import PropTypes from 'prop-types';
 import { AiOutlineSearch } from 'react-icons/ai';
 import css from './Searchbar.module.css';
-import { Component } from 'react';
+import { useState, Component } from 'react';
+//-----------------------------------------------------------------
 
-export class Searchbar extends Component {
+export const Searchbar = ({ handleQuery }) => {
+  const [query, setQuery] = useState('');
+
+  const handleSubmit = evt => {
+    evt.preventDefault();
+    handleQuery(query);
+    setQuery('');
+  };
+  const handleChange = evt => setQuery(evt.target.value); // упростить
+
+  return (
+    <>
+      <header className={css.Searchbar}>
+        <form className={css.SearchForm} onSubmit={handleSubmit}>
+          <button type="submit">
+            <AiOutlineSearch className={css['SearchForm-button']} />
+            <span className={css['SearchForm-button-label']}>Search</span>
+          </button>
+
+          <input
+            className={css['SearchForm-input']}
+            type="text"
+            autoComplete="off"
+            autoFocus
+            placeholder=" Search images and photos"
+            value={query}
+            onChange={handleChange}
+          />
+        </form>
+      </header>
+    </>
+  );
+};
+
+//------------------------------------------------------------------
+export class oldSearchbar extends Component {
   state = { query: '' };
 
   handlerSubmit = evt => {
@@ -14,7 +50,7 @@ export class Searchbar extends Component {
 
   handleChange = evt => {
     const query = evt.target.value;
-    this.setState({ query, });
+    this.setState({ query });
   };
   reset = () => {
     this.setState({ query: '' });
@@ -45,6 +81,5 @@ export class Searchbar extends Component {
 }
 
 PropTypes.Searchbar = {
-    handleQuery : PropTypes.func.isRequired,
-}
-
+  handleQuery: PropTypes.func.isRequired,
+};

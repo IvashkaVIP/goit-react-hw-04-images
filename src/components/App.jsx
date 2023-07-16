@@ -1,16 +1,55 @@
 import css from './App.module.css';
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { getImages } from './Api/Api';
 import { Button } from './Button/Button';
 import { Modal } from './Modal/Modal';
 import { Loader } from './Loader/Loader';
-import {ServiceMessage} from './ServiceMessage/ServiceMessage'
-
+import { ServiceMessage } from './ServiceMessage/ServiceMessage'
+// import toasty from 'toasty';
 export const IMAGE_PER_PAGE = 12;
 
-export class App extends Component {
+
+
+export const App = () => {
+    
+  const [images, setImages] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [selectedImageUrl, setselectedImageUrl] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = ({ query }) => {
+    if (!query) {
+      // toasty.error('The request cannot be empty');
+      alert('The request cannot be empty');
+      return;
+    }
+    // this.setState({ images: [], searchQuery: query, currentPage: 1 });
+    setImages([]);
+    setSearchQuery(query);
+    setCurrentPage(1);
+    console.log(query);
+  }
+
+  return (
+    <>
+      <Searchbar handleQuery={handleSubmit} />
+    </>
+  );
+
+}
+
+
+
+
+
+
+
+//-----------------------------------------------------------------------------
+export class oldApp extends Component {
   state = {
     images: [],
     searchQuery: '',
@@ -51,7 +90,11 @@ export class App extends Component {
   };
 
   handleSubmit = ({query}) => {
-    if (!query) { alert('The request cannot be empty'); return }
+    if (!query) {
+      // toasty.error('The request cannot be empty');
+      alert('The request cannot be empty'); 
+      return;
+    }
     
     this.setState({ images: [], searchQuery: query, currentPage: 1 });
     
