@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { AiOutlineSearch } from 'react-icons/ai';
 import css from './Searchbar.module.css';
-import { useState, Component } from 'react';
+import { useState } from 'react';
 //-----------------------------------------------------------------
 
 export const Searchbar = ({ handleQuery }) => {
