@@ -1,5 +1,5 @@
 import css from './App.module.css';
-import React, {useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { getImages } from './Api/Api';
@@ -29,7 +29,6 @@ export const App = () => {
       alert('The request cannot be empty');
       return;
     }
-    // this.setState({ images: [], searchQuery: query, currentPage: 1 });
     setImages([]);
     setSearchQuery(query);
     setCurrentPage(1);
@@ -51,17 +50,15 @@ export const App = () => {
   const handleOpenModal = evt => {
     setSelectedImageUrl(images[evt.currentTarget.id].largeImageURL);
   };
-const isLoadMore = () => {
-  return !(
-    !searchQuery ||
-    currentPage * IMAGE_PER_PAGE >= totalPages ||
-    isLoading
-  );
-};
-const handleClickLoadMore = () => setCurrentPage(prevState => (prevState + 1));
-  
+  const isLoadMore = () => {
+    return !(
+      !searchQuery ||
+      currentPage * IMAGE_PER_PAGE >= totalPages ||
+      isLoading
+    );
+  };
+  const handleClickLoadMore = () => setCurrentPage(prevState => prevState + 1);
 
-  
   return (
     <div className={css.App}>
       <Searchbar handleQuery={handleSubmit} />
