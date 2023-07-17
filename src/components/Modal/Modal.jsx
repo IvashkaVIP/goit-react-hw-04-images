@@ -1,43 +1,48 @@
-import { Component } from "react";
+import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import css from './Modal.module.css';
 
 const modalRoot = document.querySelector('#modal-root');
 
-export class Modal extends Component {
-  
-  componentDidMount() {
-    //console.log(this.props);
-    // console.log('Modal >>> DidMount');
-    window.addEventListener('keydown', this.handleKeyDown);
-  }
+export const Modal = ({ onClose, children }) => {
+  // console.log("Modal");
 
-  componentWillUnmount() {
-    // console.log('Modal >>> WillUnmount');
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
+  useEffect(() => {
+    const handleKeyDown = ({ code }) => {
+      if (code === 'Escape') {
+        //   console.log('Modal >>> handleKeyDown : Escape');
+        onClose();
+      }
+    };
 
-  handleKeyDown = ({ code }) => {
-    if (code === 'Escape') {
-    //   console.log('Modal >>> handleKeyDown : Escape');
-      this.props.onClose();
-    }
-  };
+    console.log('add listener  ', Date.now());
+    window.addEventListener('keydown', handleKeyDown);
 
-  handleBackdropClick = evt => {
+    return () => {
+      console.log('remove listener  ', Date.now());
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClose]);
+
+  const handleBackdropClick = evt => {
     if (evt.currentTarget === evt.target) {
-    //   console.log('Modal >>>  Click on BackDrop');
-      this.props.onClose();
+      //   console.log('Modal >>>  Click on BackDrop');
+      onClose();
     }
   };
 
-  render() {
-    return createPortal (
-      <>
-        <div className={css.Overlay} onClick={this.handleBackdropClick}>
-          <div className={css.Modal}>{this.props.children}</div>
-        </div>
-      </>, modalRoot,
-    );
-  }
-}
+  return createPortal(
+    <>
+      <div className={css.Overlay} onClick={handleBackdropClick}>
+        <div className={css.Modal}>{children}</div>
+      </div>
+    </>,
+    modalRoot
+  );
+};
+
+PropTypes.Modal = {
+  onClose: PropTypes.func.isRequired,
+  children: PropTypes.any.isRequired,
+};
