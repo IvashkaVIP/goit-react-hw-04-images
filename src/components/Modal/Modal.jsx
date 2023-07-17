@@ -6,28 +6,20 @@ import css from './Modal.module.css';
 const modalRoot = document.querySelector('#modal-root');
 
 export const Modal = ({ onClose, children }) => {
-  // console.log("Modal");
-
   useEffect(() => {
-    const handleKeyDown = ({ code }) => {
-      if (code === 'Escape') {
-        //   console.log('Modal >>> handleKeyDown : Escape');
-        onClose();
-      }
+    const handleKeyDown = evt => {
+      if (evt.code === 'Escape') onClose();
     };
 
-    console.log('add listener  ', Date.now());
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      console.log('remove listener  ', Date.now());
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onClose]);
+  });
 
   const handleBackdropClick = evt => {
     if (evt.currentTarget === evt.target) {
-      //   console.log('Modal >>>  Click on BackDrop');
       onClose();
     }
   };
